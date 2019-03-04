@@ -15,4 +15,6 @@ public enum ElementType: String {
     case way
     /// Specifies the member is a relation
     case relation
+    /// Specifies the member is a way and node
+    case wayNode
 }

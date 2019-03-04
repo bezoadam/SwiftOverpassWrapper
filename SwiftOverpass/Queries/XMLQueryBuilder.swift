@@ -72,6 +72,38 @@ public final class XMLQueryBuilder: QueryBuilder {
         return doc.xmlCompact
     }
 
+    public func makeWayNodeQuery() -> String {
+        let doc = AEXMLDocument()
+        // Sets attributes to <osm-script> element
+        var osmAttributes = [String : String]()
+        if let timeout = timeout {
+            osmAttributes["timeout"] = "\(timeout)"
+        }
+        if let elementLimit = elementLimit {
+            osmAttributes["element-limit"] = "\(elementLimit)"
+        }
+        let osmScript = doc.addChild(name: "osm-script", attributes: osmAttributes)
+        let union = osmScript.addChild(name: "union")
+        // Adds <query> elements to main document
+        queries.forEach { wayNodeQuery in
+            if let wayNodeQuery = wayNodeQuery as? WayNodeQuery {
+                wayNodeQuery.wayQueries.forEach { union.addChild(makeQueryElement($0)) }
+                wayNodeQuery.nodeQueries.forEach { union.addChild(makeQueryElement($0)) }
+            }
+        }
+        // Finally, put <print> element to make output
+        var printAttributes = [String : String]()
+        if let verbosity = verbosity {
+            printAttributes["mode"] = verbosity.stringValue
+        }
+        if let order = order, order == .qt {
+            printAttributes["order"] = order.stringValue
+        }
+        union.addChild(name: "recurse", value: nil, attributes: ["type": "way-node"])
+        osmScript.addChild(name: "print", attributes: printAttributes)
+        return doc.xmlCompact
+    }
+
     private func makeUnionElement(recurseType: String) -> AEXMLElement {
         let element = AEXMLElement(name: "union")
         element.addChild(name: "item")

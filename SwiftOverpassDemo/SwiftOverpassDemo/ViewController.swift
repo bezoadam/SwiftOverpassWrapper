@@ -15,16 +15,18 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let node = NodeQuery()
-        node.hasTag("name", equals: "Schloss Neuschwanstein")
-        let rel = node.relation()
-        
         let query = WayQuery()
-        let around = Around(lat: 49.202502, lon: 16.607205, radius: 50)
+        let around = Around(lat: 49.202502, lon: 16.607205, radius: 1500)
         query.around = around
-        query.hasTag("railway", equals: "tram")
+        query.hasTag("waterway", equals: "stream")
 
-        SwiftOverpass.api(endpoint: "http://overpass-api.de/api/interpreter", recurseType: "down").fetch(query) { (response, error) in
+        let node = NodeQuery()
+        node.around = around
+        node.hasTag("amenity", equals: "drinking_water")
+
+        let wayNodeQuery = WayNodeQuery(wayQueries: [query], nodeQueries: [node])
+
+        SwiftOverpass.api(endpoint: "http://overpass-api.de/api/interpreter", recurseType: "down").fetch(wayNodeQuery, elementType: .wayNode) { (response, error) in
             switch (response, error) {
             case let (.some(overpassResponse), nil):
                 self.generateNamedLocations(overpassResponse: overpassResponse)

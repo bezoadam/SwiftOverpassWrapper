@@ -122,10 +122,15 @@ public final class OverpassApi {
      - parameter order: Order of output. `.qt` is faster.
      - parameter completion: A completion handler.
      */
-    public func fetch(_ queries: [OverpassQuery], verbosity: OutputVerbosity? = nil, order: OutputOrder? = nil, completion: @escaping CompletionClosure) {
+    public func fetch(_ queries: [OverpassQuery], elementType:ElementType, verbosity: OutputVerbosity? = nil, order: OutputOrder? = nil, completion: @escaping CompletionClosure) {
         let builder = XMLQueryBuilder(queries: queries, verbosity: verbosity, order: order, timeout: timeout, elementLimit: elementLimit, recurseType: recurseType)
-        
-        let parameters: [String : String] = ["data" : builder.makeQuery()]
+
+        var parameters: [String:String] = [:]
+        if elementType == .wayNode {
+            parameters = ["data" : builder.makeWayNodeQuery()]
+        } else {
+            parameters = ["data" : builder.makeQuery()]
+        }
         
         let headers: HTTPHeaders = [
             "Content-Type" : "application/x-www-form-urlencoded; charset=UTF-8"
@@ -167,8 +172,7 @@ public final class OverpassApi {
      - parameter order: Order of output. `.qt` is faster.
      - parameter completion: A completion handler.
     */
-    public func fetch(_ query: OverpassQuery, verbosity: OutputVerbosity? = nil, order: OutputOrder? = nil, completion: @escaping CompletionClosure) {
-        fetch([query], verbosity: verbosity, order: order, completion: completion)
+    public func fetch(_ query: OverpassQuery, elementType:ElementType, verbosity: OutputVerbosity? = nil, order: OutputOrder? = nil, completion: @escaping CompletionClosure) {
+        fetch([query], elementType: elementType, verbosity: verbosity, order: order, completion: completion)
     }
-    
 }
