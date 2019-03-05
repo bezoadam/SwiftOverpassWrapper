@@ -19,11 +19,11 @@ public final class WayNodeQuery: OverpassQuery {
     public var tags: [String : OverpassTag] = [:]
     public var boundingBox: BoudingBox?
     public var around: Around?
-    public var wayQueries: [WayQuery]
-    public var nodeQueries: [NodeQuery]
+    public var wayQuery: WayQuery
+    public var nodeQuery: NodeQuery
 
-    public init(wayQueries: [WayQuery], nodeQueries: [NodeQuery]) {
-        self.wayQueries = wayQueries
-        self.nodeQueries = nodeQueries
+    public init(wayQuery: WayQuery, nodeQuery: NodeQuery) {
+        self.wayQuery = wayQuery
+        self.nodeQuery = nodeQuery
     }
 }

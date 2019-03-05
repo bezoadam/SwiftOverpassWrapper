@@ -87,8 +87,8 @@ public final class XMLQueryBuilder: QueryBuilder {
         // Adds <query> elements to main document
         queries.forEach { wayNodeQuery in
             if let wayNodeQuery = wayNodeQuery as? WayNodeQuery {
-                wayNodeQuery.wayQueries.forEach { union.addChild(makeQueryElement($0)) }
-                wayNodeQuery.nodeQueries.forEach { union.addChild(makeQueryElement($0)) }
+                union.addChild(makeQueryElement(wayNodeQuery.wayQuery))
+                union.addChild(makeQueryElement(wayNodeQuery.nodeQuery))
             }
         }
         // Finally, put <print> element to make output

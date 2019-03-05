@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         node.around = around
         node.hasTag("amenity", equals: "drinking_water")
 
-        let wayNodeQuery = WayNodeQuery(wayQueries: [query], nodeQueries: [node])
+        let wayNodeQuery = WayNodeQuery(wayQuery: query, nodeQuery: node)
 
         SwiftOverpass.api(endpoint: "http://overpass-api.de/api/interpreter", recurseType: "down").fetch(wayNodeQuery, elementType: .wayNode) { (response, error) in
             switch (response, error) {
